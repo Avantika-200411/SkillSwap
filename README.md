@@ -6,10 +6,9 @@
 
 **Track:** Real-World AI Products  
 **Product:** SkillSwap  
-**Hackathon ID:** `YOUR_HACKATHON_ID`
+**Hackathon ID:** `AZIS-VVU7FB`
 
-> ⚠️ Replace `YOUR_HACKATHON_ID` with the exact Hackathon ID provided by the hackathon platform before submission.
-
+> 
 ---
 
 # 1. What is SkillSwap?
