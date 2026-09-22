@@ -1,0 +1,697 @@
+{% extends "base.html" %}
+
+{% block title %}SkillSwap · Find Skills. Share Skills.{% endblock %}
+
+{% block content %}
+
+<!-- =========================================
+     HERO SECTION
+========================================= -->
+
+<section class="hero-section">
+
+    <div class="hero-content">
+
+        <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            SKILLS · PEOPLE · OPPORTUNITIES
+        </div>
+
+        <h1>
+            Turn what you know
+            <span>into what's next.</span>
+        </h1>
+
+        <p class="hero-description">
+            Discover talented people, offer your skills,
+            and turn simple ideas into real outcomes.
+        </p>
+
+
+        <!-- Search -->
+
+        <form action="{{ url_for('home') }}"
+              method="GET"
+              class="hero-search">
+
+            <div class="search-input-wrap">
+
+                <span class="search-icon">⌕</span>
+
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ search }}"
+                    placeholder="Search skills, services, creators..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+            <button type="submit" class="btn btn-primary search-button">
+                Search
+            </button>
+
+        </form>
+
+
+        <!-- Popular searches -->
+
+        <div class="popular-searches">
+
+            <span>Popular:</span>
+
+            <a href="{{ url_for('home', category='AI & ML') }}">
+                AI & ML
+            </a>
+
+            <a href="{{ url_for('home', category='Design') }}">
+                Design
+            </a>
+
+            <a href="{{ url_for('home', category='Writing') }}">
+                Writing
+            </a>
+
+            <a href="{{ url_for('home', category='Data & Analytics') }}">
+                Data & Analytics
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Hero visual -->
+
+    <div class="hero-visual">
+
+        <div class="floating-card card-one">
+
+            <span class="floating-icon">✦</span>
+
+            <div>
+                <strong>New skill found</strong>
+                <small>AI & ML</small>
+            </div>
+
+        </div>
+
+
+        <div class="hero-orb">
+
+            <div class="orb-inner">
+
+                <span class="orb-symbol">✦</span>
+
+                <strong>
+                    Skill
+                    <br>
+                    meets
+                    <br>
+                    opportunity.
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="floating-card card-two">
+
+            <div class="mini-avatar">
+                A
+            </div>
+
+            <div>
+                <strong>Creator joined</strong>
+                <small>Ready to collaborate</small>
+            </div>
+
+        </div>
+
+
+        <div class="hero-decoration decoration-one"></div>
+        <div class="hero-decoration decoration-two"></div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     STATS
+========================================= -->
+
+<section class="stats-strip">
+
+    <div class="stat-item">
+
+        <strong>{{ total_gigs }}</strong>
+
+        <span>Active Gigs</span>
+
+    </div>
+
+
+    <div class="stat-divider"></div>
+
+
+    <div class="stat-item">
+
+        <strong>{{ total_bookings }}</strong>
+
+        <span>Bookings</span>
+
+    </div>
+
+
+    <div class="stat-divider"></div>
+
+
+    <div class="stat-item">
+
+        <strong>{{ total_creators }}</strong>
+
+        <span>Creators</span>
+
+    </div>
+
+
+    <div class="stat-divider"></div>
+
+
+    <div class="stat-item">
+
+        <strong>100%</strong>
+
+        <span>Open Access</span>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     CATEGORY SECTION
+========================================= -->
+
+<section class="market-section">
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="eyebrow">
+                EXPLORE SKILLS
+            </span>
+
+            <h2>
+                What are you looking for?
+            </h2>
+
+        </div>
+
+        <a href="{{ url_for('home') }}" class="text-link">
+            View all →
+        </a>
+
+    </div>
+
+
+    <div class="category-grid">
+
+
+        <!-- AI & ML -->
+
+        <a href="{{ url_for('home', category='AI & ML') }}"
+           class="category-card category-ai">
+
+            <div class="category-art">
+
+                <div class="art-orbit orbit-one"></div>
+                <div class="art-orbit orbit-two"></div>
+
+                <span>✦</span>
+
+            </div>
+
+            <div class="category-content">
+
+                <span class="category-number">01</span>
+
+                <h3>AI & ML</h3>
+
+                <p>
+                    AI solutions, ML guidance & automation
+                </p>
+
+            </div>
+
+            <span class="category-arrow">↗</span>
+
+        </a>
+
+
+        <!-- Design -->
+
+        <a href="{{ url_for('home', category='Design') }}"
+           class="category-card category-design">
+
+            <div class="category-art">
+
+                <div class="design-shape shape-one"></div>
+                <div class="design-shape shape-two"></div>
+                <div class="design-shape shape-three"></div>
+
+            </div>
+
+            <div class="category-content">
+
+                <span class="category-number">02</span>
+
+                <h3>Design</h3>
+
+                <p>
+                    Logos, UI, graphics & visual identity
+                </p>
+
+            </div>
+
+            <span class="category-arrow">↗</span>
+
+        </a>
+
+
+        <!-- Writing -->
+
+        <a href="{{ url_for('home', category='Writing') }}"
+           class="category-card category-writing">
+
+            <div class="category-art writing-art">
+
+                <span class="writing-line"></span>
+                <span class="writing-line short"></span>
+                <span class="writing-line"></span>
+                <span class="writing-line medium"></span>
+
+            </div>
+
+            <div class="category-content">
+
+                <span class="category-number">03</span>
+
+                <h3>Writing</h3>
+
+                <p>
+                    Content, blogs, resumes & copywriting
+                </p>
+
+            </div>
+
+            <span class="category-arrow">↗</span>
+
+        </a>
+
+
+        <!-- Data & Analytics -->
+
+        <a href="{{ url_for('home', category='Data & Analytics') }}"
+           class="category-card category-data">
+
+            <div class="category-art data-art">
+
+                <div class="data-bar bar-one"></div>
+                <div class="data-bar bar-two"></div>
+                <div class="data-bar bar-three"></div>
+                <div class="data-bar bar-four"></div>
+
+            </div>
+
+            <div class="category-content">
+
+                <span class="category-number">04</span>
+
+                <h3>Data & Analytics</h3>
+
+                <p>
+                    Analytics, dashboards & insights
+                </p>
+
+            </div>
+
+            <span class="category-arrow">↗</span>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     GIG MARKETPLACE
+========================================= -->
+
+<section class="market-section gigs-section">
+
+    <div class="section-heading">
+
+        <div>
+
+            <span class="eyebrow">
+
+                {% if search or selected_category %}
+                    SEARCH RESULTS
+                {% else %}
+                    MARKETPLACE
+                {% endif %}
+
+            </span>
+
+            <h2>
+
+                {% if search %}
+
+                    Results for "{{ search }}"
+
+                {% elif selected_category %}
+
+                    {{ selected_category }} gigs
+
+                {% else %}
+
+                    Fresh from the community
+
+                {% endif %}
+
+            </h2>
+
+        </div>
+
+
+        <div class="result-count">
+
+            {{ gigs|length }} available
+
+        </div>
+
+    </div>
+
+
+    {% if gigs %}
+
+    <div class="gig-grid">
+
+        {% for gig in gigs %}
+
+        <article class="gig-card">
+
+
+            <!-- Visual -->
+
+            <div class="gig-image
+
+                {% if gig['category'] == 'AI & ML' %}
+
+                    gig-ai
+
+                {% elif gig['category'] == 'Design' %}
+
+                    gig-design
+
+                {% elif gig['category'] == 'Writing' %}
+
+                    gig-writing
+
+                {% elif gig['category'] == 'Data & Analytics' %}
+
+                    gig-data
+
+                {% else %}
+
+                    gig-default
+
+                {% endif %}
+
+            ">
+
+                <div class="gig-image-pattern"></div>
+
+
+                <span class="gig-category">
+
+                    {{ gig["category"] }}
+
+                </span>
+
+
+                <span class="availability-pill">
+
+                    <span></span>
+
+                    Available
+
+                </span>
+
+
+                {% if gig["category"] == "AI & ML" %}
+
+                    <div class="gig-art ai-art">
+
+                        <span>AI</span>
+
+                        <i></i>
+                        <i></i>
+                        <i></i>
+
+                    </div>
+
+
+                {% elif gig["category"] == "Design" %}
+
+                    <div class="gig-art design-gig-art">
+
+                        <div></div>
+                        <div></div>
+                        <div></div>
+
+                    </div>
+
+
+                {% elif gig["category"] == "Writing" %}
+
+                    <div class="gig-art writing-gig-art">
+
+                        <span>W</span>
+
+                        <small>
+                            words
+                        </small>
+
+                    </div>
+
+
+                {% elif gig["category"] == "Data & Analytics" %}
+
+                    <div class="gig-art data-gig-art">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+
+                {% else %}
+
+                    <div class="gig-art default-gig-art">
+
+                        ✦
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- Content -->
+
+            <div class="gig-card-content">
+
+
+                <div class="gig-creator">
+
+                    <div class="creator-avatar">
+
+                        {{ gig["creator_name"][0]|upper }}
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            CREATED BY
+                        </span>
+
+                        <strong>
+                            {{ gig["creator_name"] }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    {{ gig["title"] }}
+                </h3>
+
+
+                <p class="gig-description">
+
+                    {{ gig["description"] }}
+
+                </p>
+
+
+                <div class="gig-footer">
+
+
+                    <div class="gig-price">
+
+                        <span>
+                            STARTING AT
+                        </span>
+
+                        <strong>
+                            ₹{{ gig["rate"] }}
+                        </strong>
+
+                    </div>
+
+
+                    <a
+                        href="{{ url_for('gig_details', gig_id=gig['id']) }}"
+                        class="gig-view"
+                    >
+
+                        View Gig
+
+                        <span>
+                            ↗
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+
+    {% else %}
+
+
+    <!-- Empty state -->
+
+    <div class="empty-state marketplace-empty">
+
+        <div class="empty-icon">
+            ✦
+        </div>
+
+        <span class="eyebrow">
+            NOTHING FOUND
+        </span>
+
+        <h2>
+            No gigs match your search.
+        </h2>
+
+        <p>
+            Try another keyword or explore all available skills.
+        </p>
+
+        <a
+            href="{{ url_for('home') }}"
+            class="btn btn-primary"
+        >
+            Explore All Gigs →
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+
+<!-- =========================================
+     CREATOR CTA
+========================================= -->
+
+<section class="creator-cta">
+
+    <div class="cta-glow"></div>
+
+    <div class="cta-content">
+
+        <span class="eyebrow">
+            HAVE A SKILL?
+        </span>
+
+        <h2>
+            Your next opportunity
+            could start here.
+        </h2>
+
+        <p>
+            Turn your knowledge, creativity or experience
+            into a service people can actually use.
+        </p>
+
+        <a
+            href="{{ url_for('create_gig') }}"
+            class="btn btn-light"
+        >
+            Post Your First Gig →
+        </a>
+
+    </div>
+
+
+    <div class="cta-visual">
+
+        <div class="cta-circle circle-large"></div>
+        <div class="cta-circle circle-medium"></div>
+
+        <span class="cta-star star-one">
+            ✦
+        </span>
+
+        <span class="cta-star star-two">
+            ✦
+        </span>
+
+        <span class="cta-star star-three">
+            ✦
+        </span>
+
+    </div>
+
+</section>
+
+{% endblock %}

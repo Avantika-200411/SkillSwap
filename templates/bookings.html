@@ -1,0 +1,773 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings — SkillSwap{% endblock %}
+
+{% block content %}
+
+<section class="page-shell">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <div>
+            <div class="eyebrow">YOUR ACTIVITY</div>
+
+            <h1 class="page-title">
+                My <span>Bookings.</span>
+            </h1>
+
+            <p class="page-subtitle">
+                Track the skills you've requested and see what happens next.
+            </p>
+        </div>
+
+        <a href="{{ url_for('home') }}" class="btn btn-primary">
+            Explore Gigs →
+        </a>
+    </div>
+
+
+    <!-- BOOKING SUMMARY -->
+    <div class="booking-summary">
+
+        <div class="summary-card">
+            <div class="summary-icon">◷</div>
+            <div>
+                <strong>
+                    {{ bookings|selectattr('status', 'equalto', 'PENDING')|list|length }}
+                </strong>
+                <span>Pending</span>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">✓</div>
+            <div>
+                <strong>
+                    {{ bookings|selectattr('status', 'equalto', 'ACCEPTED')|list|length }}
+                </strong>
+                <span>Accepted</span>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">×</div>
+            <div>
+                <strong>
+                    {{ bookings|selectattr('status', 'equalto', 'DECLINED')|list|length }}
+                </strong>
+                <span>Declined</span>
+            </div>
+        </div>
+
+        <div class="summary-card highlight">
+            <div class="summary-icon">✦</div>
+            <div>
+                <strong>{{ bookings|length }}</strong>
+                <span>Total Requests</span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- BOOKINGS -->
+    <div class="section-heading-row">
+
+        <div>
+            <div class="eyebrow">BOOKING HISTORY</div>
+
+            <h2>
+                Your requests
+            </h2>
+        </div>
+
+        <span class="booking-count">
+            {{ bookings|length }} booking{% if bookings|length != 1 %}s{% endif %}
+        </span>
+
+    </div>
+
+
+    {% if bookings %}
+
+        <div class="booking-list">
+
+            {% for booking in bookings %}
+
+            <article class="booking-card">
+
+                <!-- TOP -->
+                <div class="booking-card-top">
+
+                    <div class="booking-category">
+                        <span class="category-dot"></span>
+                        {{ booking["category"] }}
+                    </div>
+
+                    {% if booking["status"] == "PENDING" %}
+
+                        <span class="status-badge status-pending">
+                            <span></span>
+                            Pending
+                        </span>
+
+                    {% elif booking["status"] == "ACCEPTED" %}
+
+                        <span class="status-badge status-accepted">
+                            <span>✓</span>
+                            Accepted
+                        </span>
+
+                    {% else %}
+
+                        <span class="status-badge status-declined">
+                            <span>×</span>
+                            Declined
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- MAIN -->
+                <div class="booking-main">
+
+                    <div class="booking-visual">
+
+                        <div class="booking-visual-glow"></div>
+
+                        <div class="booking-visual-letter">
+                            {{ booking["title"][0]|upper }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="booking-info">
+
+                        <h3>
+                            {{ booking["title"] }}
+                        </h3>
+
+                        <p class="booking-creator">
+                            Created by
+                            <strong>{{ booking["creator_name"] }}</strong>
+                        </p>
+
+                        <p class="booking-requirements">
+                            "{{ booking["requirements"] }}"
+                        </p>
+
+                    </div>
+
+
+                    <div class="booking-price">
+
+                        <span>Service rate</span>
+
+                        <strong>
+                            ₹{{ "%.0f"|format(booking["rate"]) }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DETAILS -->
+                <div class="booking-details">
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            CONTACT
+                        </span>
+
+                        <span class="detail-value">
+                            {{ booking["client_contact"] }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            REQUESTED BY
+                        </span>
+
+                        <span class="detail-value">
+                            {{ booking["client_name"] }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            STATUS
+                        </span>
+
+                        <span class="detail-value">
+                            {% if booking["status"] == "PENDING" %}
+                                Waiting for creator
+                            {% elif booking["status"] == "ACCEPTED" %}
+                                Creator accepted
+                            {% else %}
+                                Request declined
+                            {% endif %}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTION -->
+                <div class="booking-action">
+
+                    {% if booking["status"] == "PENDING" %}
+
+                        <div class="booking-message pending-message">
+                            <span>◷</span>
+                            Waiting for the creator to respond.
+                        </div>
+
+                    {% elif booking["status"] == "ACCEPTED" %}
+
+                        <div class="booking-message accepted-message">
+                            <span>✓</span>
+                            Your booking has been accepted.
+                        </div>
+
+                    {% else %}
+
+                        <div class="booking-message declined-message">
+                            <span>×</span>
+                            This request wasn't accepted.
+                        </div>
+
+                        <a href="{{ url_for('home') }}" class="btn btn-primary">
+                            Find Another Gig →
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <!-- EMPTY STATE -->
+        <div class="empty-state booking-empty">
+
+            <div class="empty-icon">
+                ✦
+            </div>
+
+            <div class="eyebrow">
+                NOTHING HERE YET
+            </div>
+
+            <h2>
+                Your next opportunity<br>
+                starts with one booking.
+            </h2>
+
+            <p>
+                Explore available skills and connect with creators
+                who can help bring your idea to life.
+            </p>
+
+            <a href="{{ url_for('home') }}" class="btn btn-primary">
+                Explore Marketplace →
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<style>
+
+/* ================================
+   BOOKINGS PAGE
+================================ */
+
+.page-shell {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 80px 0 120px;
+}
+
+
+/* HEADER */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.eyebrow {
+    color: #ff4f7b;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    margin-bottom: 14px;
+}
+
+.page-title {
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: .95;
+    margin: 0;
+    letter-spacing: -3px;
+}
+
+.page-title span {
+    background: linear-gradient(
+        90deg,
+        #ff4f7b,
+        #ff8b70
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+    color: #a99aae;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+
+/* SUMMARY */
+
+.booking-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: rgba(29, 12, 32, .75);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 90px;
+}
+
+.summary-card {
+    min-height: 125px;
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border-right: 1px solid rgba(255,255,255,.07);
+}
+
+.summary-card:last-child {
+    border-right: none;
+}
+
+.summary-card strong {
+    display: block;
+    font-size: 32px;
+    color: #fff;
+}
+
+.summary-card span {
+    color: #95869b;
+    font-size: 13px;
+}
+
+.summary-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(
+        135deg,
+        rgba(174,0,255,.25),
+        rgba(255,55,91,.2)
+    );
+    color: #ff6286;
+    font-size: 20px;
+}
+
+.summary-card.highlight strong {
+    color: #ff6286;
+}
+
+
+/* SECTION */
+
+.section-heading-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 28px;
+}
+
+.section-heading-row h2 {
+    margin: 0;
+    font-size: 34px;
+    letter-spacing: -1px;
+}
+
+.booking-count {
+    color: #8f8194;
+    font-size: 14px;
+}
+
+
+/* BOOKING CARD */
+
+.booking-list {
+    display: grid;
+    gap: 22px;
+}
+
+.booking-card {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(39,18,43,.96),
+            rgba(18,10,22,.96)
+        );
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 26px;
+    padding: 28px;
+    transition: .25s ease;
+}
+
+.booking-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,79,123,.3);
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+
+
+/* TOP */
+
+.booking-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.booking-category {
+    color: #b9aabd;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.category-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ff557d;
+    margin-right: 7px;
+}
+
+
+/* STATUS */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 13px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.status-badge > span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.status-pending {
+    color: #ffc36b;
+    background: rgba(255,190,80,.09);
+}
+
+.status-pending > span {
+    background: #ffc36b;
+}
+
+.status-accepted {
+    color: #69e6b1;
+    background: rgba(70,220,160,.09);
+}
+
+.status-declined {
+    color: #ff718e;
+    background: rgba(255,80,110,.09);
+}
+
+
+/* MAIN */
+
+.booking-main {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 24px;
+    align-items: center;
+}
+
+.booking-visual {
+    height: 100px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    background:
+        radial-gradient(
+            circle at 30% 30%,
+            #ff4770,
+            transparent 45%
+        ),
+        linear-gradient(
+            135deg,
+            #7800a8,
+            #f62459
+        );
+}
+
+.booking-visual-glow {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 2px solid rgba(255,255,255,.25);
+    border-radius: 50%;
+}
+
+.booking-visual-letter {
+    position: relative;
+    z-index: 2;
+    font-size: 36px;
+    font-weight: 900;
+    color: #fff;
+}
+
+.booking-info h3 {
+    margin: 0 0 7px;
+    font-size: 23px;
+}
+
+.booking-creator {
+    color: #a797aa;
+    margin: 0 0 13px;
+    font-size: 13px;
+}
+
+.booking-creator strong {
+    color: #fff;
+}
+
+.booking-requirements {
+    margin: 0;
+    color: #817585;
+    font-size: 13px;
+    max-width: 620px;
+}
+
+.booking-price {
+    text-align: right;
+}
+
+.booking-price span {
+    display: block;
+    color: #817585;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.booking-price strong {
+    font-size: 25px;
+    color: #fff;
+}
+
+
+/* DETAILS */
+
+.booking-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255,255,255,.07);
+    gap: 20px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.detail-label {
+    font-size: 10px;
+    color: #706575;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+}
+
+.detail-value {
+    font-size: 13px;
+    color: #c5b8c8;
+}
+
+
+/* ACTION */
+
+.booking-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.booking-message {
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pending-message {
+    color: #b69da8;
+}
+
+.accepted-message {
+    color: #69e6b1;
+}
+
+.declined-message {
+    color: #ff718e;
+}
+
+
+/* EMPTY */
+
+.booking-empty {
+    margin-top: 30px;
+    padding: 90px 30px;
+}
+
+.booking-empty h2 {
+    font-size: 38px;
+    letter-spacing: -1px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .page-shell {
+        width: min(100% - 28px, 650px);
+        padding-top: 50px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .booking-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .summary-card:nth-child(2) {
+        border-right: none;
+    }
+
+    .summary-card:nth-child(3),
+    .summary-card:nth-child(4) {
+        border-top: 1px solid rgba(255,255,255,.07);
+    }
+
+    .booking-main {
+        grid-template-columns: 75px 1fr;
+    }
+
+    .booking-visual {
+        width: 75px;
+        height: 75px;
+    }
+
+    .booking-price {
+        grid-column: 2;
+        text-align: left;
+    }
+
+    .booking-details {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-action {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+
+@media (max-width: 520px) {
+
+    .booking-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-card {
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+
+    .summary-card:last-child {
+        border-bottom: none;
+    }
+
+    .booking-card {
+        padding: 20px;
+    }
+
+    .booking-card-top {
+        align-items: flex-start;
+        gap: 15px;
+        flex-direction: column;
+    }
+
+    .booking-main {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-price {
+        grid-column: 1;
+    }
+
+    .booking-empty h2 {
+        font-size: 28px;
+    }
+}
+
+</style>
+
+{% endblock %}

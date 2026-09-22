@@ -1,0 +1,620 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .gig-page {
+        padding: 35px 0 70px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #b9a9c7;
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: 28px;
+        transition: .2s;
+    }
+
+    .back-link:hover {
+        color: #ffffff;
+        transform: translateX(-3px);
+    }
+
+    .gig-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(340px, .8fr);
+        gap: 28px;
+        align-items: start;
+    }
+
+    /* LEFT */
+    .gig-main-card {
+        position: relative;
+        overflow: hidden;
+        background:
+            radial-gradient(circle at 85% 10%, rgba(255, 73, 154, .20), transparent 28%),
+            radial-gradient(circle at 10% 90%, rgba(123, 76, 255, .18), transparent 30%),
+            rgba(25, 12, 32, .88);
+        border: 1px solid rgba(255,255,255,.10);
+        border-radius: 28px;
+        padding: 42px;
+        box-shadow: 0 25px 80px rgba(0,0,0,.28);
+    }
+
+    .gig-main-card::before {
+        content: "";
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        right: -100px;
+        top: -120px;
+        background: linear-gradient(135deg, #7b4dff, #ff4f9a, #ff7654);
+        filter: blur(75px);
+        opacity: .20;
+        pointer-events: none;
+    }
+
+    .gig-category {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.07);
+        border: 1px solid rgba(255,255,255,.10);
+        color: #e8d9ff;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 22px;
+    }
+
+    .gig-category-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #ff5ca8;
+        box-shadow: 0 0 12px #ff5ca8;
+    }
+
+    .gig-title {
+        position: relative;
+        z-index: 1;
+        font-size: clamp(34px, 5vw, 58px);
+        line-height: 1.02;
+        letter-spacing: -2px;
+        margin: 0 0 20px;
+        font-weight: 800;
+        background: linear-gradient(
+            100deg,
+            #ffffff 15%,
+            #e5baff 48%,
+            #ff8bba 85%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .gig-description {
+        position: relative;
+        z-index: 1;
+        color: #c9bdcf;
+        font-size: 17px;
+        line-height: 1.8;
+        max-width: 700px;
+        margin-bottom: 34px;
+    }
+
+    .gig-divider {
+        height: 1px;
+        background: rgba(255,255,255,.08);
+        margin: 28px 0;
+    }
+
+    .creator-section {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .creator-avatar {
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #7447ff, #ff4f9a, #ff7654);
+        color: white;
+        font-size: 22px;
+        font-weight: 800;
+        box-shadow: 0 10px 30px rgba(180,70,180,.25);
+    }
+
+    .creator-label {
+        color: #93849e;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 4px;
+    }
+
+    .creator-name {
+        color: white;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .creator-role {
+        color: #a99bad;
+        font-size: 13px;
+        margin-top: 3px;
+    }
+
+    .gig-features {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        margin-top: 30px;
+    }
+
+    .feature-box {
+        background: rgba(255,255,255,.045);
+        border: 1px solid rgba(255,255,255,.075);
+        border-radius: 18px;
+        padding: 18px;
+    }
+
+    .feature-label {
+        color: #8f8297;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 7px;
+    }
+
+    .feature-value {
+        color: white;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    /* RIGHT BOOKING */
+    .booking-card {
+        position: sticky;
+        top: 100px;
+        background: rgba(28, 13, 35, .94);
+        border: 1px solid rgba(255,255,255,.11);
+        border-radius: 26px;
+        padding: 28px;
+        box-shadow: 0 25px 70px rgba(0,0,0,.30);
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding-bottom: 22px;
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        margin-bottom: 24px;
+    }
+
+    .price-label {
+        color: #9b8ca4;
+        font-size: 13px;
+    }
+
+    .price {
+        font-size: 38px;
+        font-weight: 800;
+        color: white;
+        margin-top: 5px;
+    }
+
+    .available-badge {
+        padding: 7px 11px;
+        border-radius: 999px;
+        background: rgba(82, 211, 143, .10);
+        border: 1px solid rgba(82, 211, 143, .22);
+        color: #72e0a5;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .booking-heading {
+        color: white;
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 7px;
+    }
+
+    .booking-subtitle {
+        color: #9f91a7;
+        font-size: 13px;
+        line-height: 1.6;
+        margin-bottom: 23px;
+    }
+
+    .form-group {
+        margin-bottom: 17px;
+    }
+
+    .form-group label {
+        display: block;
+        color: #d7cbdc;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        box-sizing: border-box;
+        background: rgba(255,255,255,.055);
+        border: 1px solid rgba(255,255,255,.10);
+        color: white;
+        border-radius: 13px;
+        padding: 13px 14px;
+        outline: none;
+        font-family: inherit;
+        transition: .2s;
+    }
+
+    .form-group textarea {
+        min-height: 105px;
+        resize: vertical;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: #74677d;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: rgba(255,91,164,.65);
+        box-shadow: 0 0 0 3px rgba(255,91,164,.08);
+    }
+
+    .book-btn {
+        width: 100%;
+        border: none;
+        border-radius: 14px;
+        padding: 15px 18px;
+        margin-top: 4px;
+        background: linear-gradient(100deg, #7548ff, #d84dca, #ff6a72);
+        color: white;
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 12px 30px rgba(215,73,180,.22);
+        transition: .2s;
+    }
+
+    .book-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 35px rgba(215,73,180,.32);
+    }
+
+    .booking-note {
+        text-align: center;
+        color: #75697d;
+        font-size: 11px;
+        line-height: 1.5;
+        margin-top: 13px;
+    }
+
+    /* HOW IT WORKS */
+    .how-section {
+        margin-top: 30px;
+        background: rgba(255,255,255,.035);
+        border: 1px solid rgba(255,255,255,.07);
+        border-radius: 22px;
+        padding: 26px;
+    }
+
+    .how-title {
+        color: white;
+        font-size: 17px;
+        font-weight: 800;
+        margin-bottom: 20px;
+    }
+
+    .steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .step {
+        padding: 16px;
+        border-radius: 16px;
+        background: rgba(255,255,255,.035);
+    }
+
+    .step-number {
+        color: #ff73ae;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+
+    .step-title {
+        color: white;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .step-text {
+        color: #8e8197;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .unavailable-card {
+        text-align: center;
+        padding: 25px;
+        background: rgba(255,255,255,.04);
+        border-radius: 16px;
+        color: #a99bad;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+        .gig-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .booking-card {
+            position: static;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .gig-main-card {
+            padding: 27px;
+            border-radius: 22px;
+        }
+
+        .gig-title {
+            font-size: 38px;
+        }
+
+        .gig-features,
+        .steps {
+            grid-template-columns: 1fr;
+        }
+
+        .booking-card {
+            padding: 22px;
+        }
+    }
+</style>
+
+<div class="gig-page">
+
+    <a href="{{ url_for('home') }}" class="back-link">
+        ← Back to Marketplace
+    </a>
+
+    <div class="gig-layout">
+
+        <!-- LEFT SIDE -->
+        <div>
+
+            <div class="gig-main-card">
+
+                <div class="gig-category">
+                    <span class="gig-category-dot"></span>
+                    {{ gig.category }}
+                    {% if gig.available %}
+                        <span>· Available</span>
+                    {% else %}
+                        <span>· Booked</span>
+                    {% endif %}
+                </div>
+
+                <h1 class="gig-title">
+                    {{ gig.title }}
+                </h1>
+
+                <p class="gig-description">
+                    {{ gig.description }}
+                </p>
+
+                <div class="gig-divider"></div>
+
+                <div class="creator-section">
+
+                    <div class="creator-avatar">
+                        {{ gig.creator_name[0]|upper }}
+                    </div>
+
+                    <div>
+                        <div class="creator-label">
+                            Offered by
+                        </div>
+
+                        <div class="creator-name">
+                            {{ gig.creator_name }}
+                        </div>
+
+                        <div class="creator-role">
+                            SkillSwap Creator
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="gig-features">
+
+                    <div class="feature-box">
+                        <div class="feature-label">
+                            Category
+                        </div>
+                        <div class="feature-value">
+                            {{ gig.category }}
+                        </div>
+                    </div>
+
+                    <div class="feature-box">
+                        <div class="feature-label">
+                            Service Type
+                        </div>
+                        <div class="feature-value">
+                            One-time Gig
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="how-section">
+
+                <div class="how-title">
+                    How booking works
+                </div>
+
+                <div class="steps">
+
+                    <div class="step">
+                        <div class="step-number">01</div>
+                        <div class="step-title">Send a request</div>
+                        <div class="step-text">
+                            Tell the creator what you need.
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">02</div>
+                        <div class="step-title">Creator reviews</div>
+                        <div class="step-text">
+                            Your request stays pending until reviewed.
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">03</div>
+                        <div class="step-title">Get confirmed</div>
+                        <div class="step-text">
+                            Accepted or declined — you'll see the status.
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="booking-card">
+
+            <div class="price-row">
+
+                <div>
+                    <div class="price-label">
+                        Starting price
+                    </div>
+
+                    <div class="price">
+                        ₹{{ gig.rate }}
+                    </div>
+                </div>
+
+                {% if gig.available %}
+                    <div class="available-badge">
+                        ● Available
+                    </div>
+                {% endif %}
+
+            </div>
+
+            {% if gig.available %}
+
+                <div class="booking-heading">
+                    Request this service
+                </div>
+
+                <div class="booking-subtitle">
+                    Send a request to
+                    <strong>{{ gig.creator_name }}</strong>.
+                    Your request will remain pending until the creator responds.
+                </div>
+
+                <form method="POST"
+                      action="{{ url_for('book_gig', gig_id=gig.id) }}">
+
+                    <div class="form-group">
+                        <label>Your Name</label>
+                        <input
+                            type="text"
+                            name="client_name"
+                            placeholder="e.g. Avni"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email / Contact</label>
+                        <input
+                            type="text"
+                            name="client_contact"
+                            placeholder="you@example.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label>What do you need?</label>
+                        <textarea
+                            name="requirements"
+                            placeholder="Tell the creator what you need..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" class="book-btn">
+                        Request to Book →
+                    </button>
+
+                    <div class="booking-note">
+                        Your request will remain <strong>Pending</strong>
+                        until the creator responds.
+                    </div>
+
+                </form>
+
+            {% else %}
+
+                <div class="unavailable-card">
+                    <strong style="color:white; display:block; margin-bottom:8px;">
+                        This gig is currently booked
+                    </strong>
+
+                    The creator has already accepted a booking
+                    for this service.
+
+                    <br><br>
+
+                    <a href="{{ url_for('home') }}"
+                       style="color:#ff72ae; font-weight:700; text-decoration:none;">
+                        ← Find another gig
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
